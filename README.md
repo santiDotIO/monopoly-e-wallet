@@ -1,4 +1,8 @@
 # monopoly-wallet
+## Styles
+
+- https://tailwindui.com/components
+- https://tailwindcss.com/
 
 ## Project setup
 ```
