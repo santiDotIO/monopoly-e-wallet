@@ -49,9 +49,9 @@ export default {
     beforeCreate: async function() {
         // Initialize Cloud Firestore through Firebase
         firebase.initializeApp({
-            apiKey: 'AIzaSyANQvlkv1GBbnxYLMkFp9SH5p4KyOK33J4',
-            authDomain: "monopoly-wallet-b2102.firebaseapp.com",
-            projectId: 'monopoly-wallet-b2102'
+            apiKey: process.env.VUE_APP_API_KEY,
+            authDomain: process.env.VUE_APP_AUTH_DOMAIN,
+            projectId: process.env.VUE_APP_PROJECT_ID,
         });
         this.db = await firebase.firestore();
         await this.checkIfInGame();
