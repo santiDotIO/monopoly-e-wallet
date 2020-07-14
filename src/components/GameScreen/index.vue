@@ -60,7 +60,7 @@ export default {
             const defaultColor = 'bg-gray-600';
             const playerColor = player.data().color;
             
-            return playerColor ? `bg-${playerColor}` : defaultColor;
+            return playerColor ? playerColor : defaultColor;
         },
         orderClass(player) {
             return this.user.uid == player.id ? 'order-0' : 'order-1'
@@ -72,7 +72,6 @@ export default {
         plus($e) {
             const givingUserDoc = this.lobby.find((player)=>player.id == this.user.uid)
             const receivingUserDoc = this.lobby.find((player)=>player.id == $e.player)
-            // console.log(givingUserDoc.data().money, receivingUserDoc.data().money)
             this.$emit('money_change', {
                 giving:{
                     id: this.user.uid,
