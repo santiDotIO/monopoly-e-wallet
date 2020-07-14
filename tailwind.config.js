@@ -1,11 +1,12 @@
 module.exports = {
-    purge: [
-        // './src/**/*.html',
-        // './src/**/*.vue',
-        // './src/**/*.js',
-        // './src/main.js',
-        // './src/App.vue',
-    ],
+    // purge: [
+    //     './src/**/*.html',
+    //     './src/**/*.vue',
+    //     './src/**/*.js',
+    //     './src/main.js',
+    //     './src/App.vue',
+    // ],
+    purge: false,
     theme: {
         extend: {},
     },
