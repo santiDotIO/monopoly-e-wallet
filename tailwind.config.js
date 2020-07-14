@@ -3,6 +3,8 @@ module.exports = {
         './src/**/*.html',
         './src/**/*.vue',
         './src/**/*.js',
+        './src/main.js',
+        './src/App.vue',
     ],
     theme: {
         extend: {},
