@@ -26,12 +26,14 @@ export default {
                 player: this.playerID, 
                 value: this.$refs.input_field.value
             });
+            this.$refs.input_field.blur();
         },
         minus() { 
             this.$emit('minus', { 
                 player: this.playerID, 
                 value: this.$refs.input_field.value
             });
+            this.$refs.input_field.blur();
         },
     }
 }
