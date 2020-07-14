@@ -27,6 +27,7 @@ export default {
                 value: this.$refs.input_field.value
             });
             this.$refs.input_field.blur();
+            this.$refs.input_field.value = '';
         },
         minus() { 
             this.$emit('minus', { 
@@ -34,6 +35,7 @@ export default {
                 value: this.$refs.input_field.value
             });
             this.$refs.input_field.blur();
+            this.$refs.input_field.value = '';
         },
     }
 }
