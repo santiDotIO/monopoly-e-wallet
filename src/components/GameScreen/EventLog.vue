@@ -4,13 +4,9 @@
     <div v-for="event in events" :key="event.id" class="flex justify-center px-4 py-2 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
         <div v-bind:class="event.data().color" class="w-full shadow-lg rounded-lg pointer-events-auto">
             <div class="flex rounded-lg shadow-xs">
-                <div class="w-0 flex-1 p-4">
-                    <div class="flex items-start">
-                        <div class="ml-3 w-0 flex-1">
-                            <p class="text-sm leading-5 font-medium text-gray-900" >{{ logDate(event.data().time_created) }}</p>
-                            <p class="mt-1 text-sm leading-5 text-black" v-html="event.data().text" />
-                    </div>
-                </div>
+                <div class="flex items-center p-2">
+                    <p class="text-sm border-r-2 border-gray-900 pr-1 leading-none font-medium text-gray-900" >{{ logDate(event.data().time_created) }}</p>
+                    <p class="ml-1 text-sm leading-none text-black" v-html="event.data().text" />
             </div>
         </div>
     </div>
