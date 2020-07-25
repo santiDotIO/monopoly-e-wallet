@@ -126,8 +126,13 @@ export default {
         registerEvent(eventType, transaction) {
             const time_created = new Date().getTime();
             const event = { time_created };
+            
+            event.color = this.players
+                    .find( player => player.id == this.user.uid)
+                    .data().color;
+
             if (eventType.includes('new_player')) {
-                event.text = `${this.user.displayName} Joined the Game!`;
+                event.text = `<strong>${this.user.displayName}</strong> Joined the Game!`;
             } else if(eventType.includes('money_transaction')) {
                 event.text = this.getMoneyTransactionText(transaction);
             }
