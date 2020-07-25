@@ -4,8 +4,8 @@
         <h2 class="mt-6 text-center text-3xl md:text-5xl leading-none font-extrabold text-gray-900">{{ user.displayName }}</h2>
     </div>
     <div class="p-4">
-        <ul class="mt-3 grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2">
-            <li v-for="player in lobby" :key="player.id" v-bind:class="orderClass(player)" class="col-span-1 flex items-center bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden">
+        <ul v-if="players" class="mt-3 grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2">
+            <li v-for="player in players" :key="player.id" v-bind:class="orderClass(player)" class="col-span-1 flex items-center bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden">
                 <div v-bind:class="colorTile(player)" class="flex-shrink-0 flex items-center justify-center w-24 h-24 text-white text-center text-sm leading-5 font-medium"></div>
                 <div class="flex-1 px-4 py-2 truncate">
                     <p class="text-gray-900 text-lg leading-5 font-medium pb-2">
@@ -40,20 +40,25 @@
             </div>
         </div>
     </div>
+    <EventLog v-bind:events="events" />
 </div>
 </template>
 
 <script>
 import PlusMinus from "./PlusMinus";
+import EventLog from "./EventLog";
+
 export default {
     name: 'GameScreen',
     components: {
-        PlusMinus
+        PlusMinus,
+        EventLog
     },
     props: {
         user: Object,
         // array of Firestore documents
-        lobby: Array,
+        players: Array,
+        events: Array,
     },
     methods: {
         colorTile(player) {
@@ -66,13 +71,14 @@ export default {
             return this.user.uid == player.id ? 'order-0' : 'order-1'
         },
         getUserMoney(id) {
-            const player = this.lobby ? this.lobby.find((player)=>player.id == id) : undefined;
+            const player = this.players ? this.players.find((player)=>player.id == id) : undefined;
             return player ? player.money : 0;
         },
         plus($e) {
-            const givingUserDoc = this.lobby.find((player)=>player.id == this.user.uid)
-            const receivingUserDoc = this.lobby.find((player)=>player.id == $e.player)
+            const givingUserDoc = this.players.find((player)=>player.id == this.user.uid)
+            const receivingUserDoc = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
+                change: Number($e.value),
                 giving:{
                     id: this.user.uid,
                     value: Number(givingUserDoc.data().money) - Number($e.value),
@@ -80,12 +86,13 @@ export default {
                 receiving: {
                     id: receivingUserDoc.id,
                     value: Number(receivingUserDoc.data().money) + Number($e.value),
-                }
+                },
             });
         },
         bank_plus($e) {
-            const player = this.lobby.find((player)=>player.id == $e.player)
+            const player = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
+                change: Number($e.value),
                 receiving: {
                     id: player.id,
                     value: Number(player.data().money) + Number($e.value),
@@ -93,9 +100,10 @@ export default {
             });
         },
         minus($e) {
-            const player = this.lobby.find((player)=>player.id == $e.player)
+            const player = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
-                receiving: {
+                change: Number($e.value),
+                giving: {
                     id: player.id,
                     value: Number(player.data().money) - Number($e.value),
                 }
