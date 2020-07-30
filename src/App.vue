@@ -10,6 +10,7 @@
         v-bind:players="players"
         v-bind:events="events"
         v-on:money_change="money_change"
+        v-on:passed_go="passed_go"
     />
     <!-- v-on:minus="minus" -->
   </div>
@@ -123,18 +124,28 @@ export default {
 
             this.registerEvent('money_transaction', {giving, receiving, change});
         },
+        passed_go(money) {
+            this.db
+                .collection(`lobby/${this.lobbyName()}/players`)
+                .doc(this.user.uid)
+                .update({ money });
+
+            this.registerEvent('passed_go');
+        },
         registerEvent(eventType, transaction) {
             const time_created = new Date().getTime();
             const event = { time_created };
             
             event.color = this.players
-                    .find( player => player.id == this.user.uid)
-                    .data().color;
+                .find( player => player.id == this.user.uid)
+                .data().color;
 
             if (eventType.includes('new_player')) {
                 event.text = `<strong>${this.user.displayName}</strong> Joined the Game!`;
             } else if(eventType.includes('money_transaction')) {
                 event.text = this.getMoneyTransactionText(transaction);
+            } else if(eventType.includes('passed_go')) {
+                event.text = `<strong>${this.user.displayName}</strong> passed go!`;
             }
             
             if (typeof event.text == 'undefined') return;

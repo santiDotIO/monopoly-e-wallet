@@ -18,10 +18,17 @@
                         v-bind:playerID="player.id" 
                         v-bind:playerMoney="getUserMoney(player.id)" 
                         v-bind:showMinus="false" 
-                        v-on:plus="plus"
-                        v-on:minus="minus"
+                        
+                        v-on:onPay="handlePay"
+                        v-on:onGet="handleGet"
                     />
-                    <!-- v-on:minus="$emit('minus', $event)" -->
+                    <button 
+                        v-if="user.uid == player.id" 
+                        @click="handlePassedGo" 
+                        type="button" 
+                        class="plus-button relative inline-flex items-center justify-center h-9 w-1/2 rounded-md  bg-green-500 text-2xl leading-5 font-medium text-white hover:bg-green-800 focus:z-10 focus:outline-none focus:border-green-300 focus:shadow-outline-blue active:bg-green-100 active:text-gray-100 transition ease-in-out duration-150" 
+                        aria-label="Pass Go"
+                    >Pass Go</button>
                 </div>
             </li>
         </ul>
@@ -33,9 +40,9 @@
                 <PlusMinus 
                     v-bind:playerID="user.uid" 
                     v-bind:playerMoney="getUserMoney(user.id)"
-                    v-bind:showMinus="true" 
-                    v-on:plus="bank_plus"
-                    v-on:minus="minus"
+                    v-bind:showGet="true" 
+                    v-on:onGet="handleGetMoneyBank"
+                    v-on:onPay="handlePay"
                 />
             </div>
         </div>
@@ -74,7 +81,7 @@ export default {
             const player = this.players ? this.players.find((player)=>player.id == id) : undefined;
             return player ? player.money : 0;
         },
-        plus($e) {
+        handlePay($e) {
             const givingUserDoc = this.players.find((player)=>player.id == this.user.uid)
             const receivingUserDoc = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
@@ -89,7 +96,17 @@ export default {
                 },
             });
         },
-        bank_plus($e) {
+        handleGet($e) {
+            const player = this.players.find((player)=>player.id == $e.player)
+            this.$emit('money_change', {
+                change: Number($e.value),
+                giving: {
+                    id: player.id,
+                    value: Number(player.data().money) - Number($e.value),
+                }
+            });
+        },
+        handleGetMoneyBank($e) {
             const player = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
                 change: Number($e.value),
@@ -99,15 +116,9 @@ export default {
                 }
             });
         },
-        minus($e) {
-            const player = this.players.find((player)=>player.id == $e.player)
-            this.$emit('money_change', {
-                change: Number($e.value),
-                giving: {
-                    id: player.id,
-                    value: Number(player.data().money) - Number($e.value),
-                }
-            });
+        handlePassedGo() {
+            const currentMoney = Number( this.players.find( ({ id }) => id == this.user.uid).data().money );
+            this.$emit('passed_go',  (currentMoney + 200));
         }
     }
 }

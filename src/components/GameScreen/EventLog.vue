@@ -1,5 +1,5 @@
 <template>
-<div class="bg-blue-100 mx-4 py-4 rounded shadow-inner">
+<div class="bg-blue-100 mx-4 py-4 rounded shadow-inner overflow-y-scroll h-64">
     <p class="px-4 text-xl md:text-2xl leading-none font-extrabold text-gray-900">Event Log</p>
     <div v-for="event in events" :key="event.id" class="flex justify-center px-4 py-2 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
         <div v-bind:class="event.data().color" class="w-full shadow-lg rounded-lg pointer-events-auto">
