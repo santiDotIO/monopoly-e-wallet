@@ -18,10 +18,10 @@
                         v-bind:playerID="player.id" 
                         v-bind:playerMoney="getUserMoney(player.id)" 
                         v-bind:showMinus="false" 
-                        v-on:plus="plus"
-                        v-on:minus="minus"
+                        
+                        v-on:onPay="handlePay"
+                        v-on:onGet="handleGet"
                     />
-                    <!-- v-on:minus="$emit('minus', $event)" -->
                 </div>
             </li>
         </ul>
@@ -33,9 +33,9 @@
                 <PlusMinus 
                     v-bind:playerID="user.uid" 
                     v-bind:playerMoney="getUserMoney(user.id)"
-                    v-bind:showMinus="true" 
-                    v-on:plus="bank_plus"
-                    v-on:minus="minus"
+                    v-bind:showGet="true" 
+                    v-on:onGet="handleGetMoneyBank"
+                    v-on:onPay="handlePay"
                 />
             </div>
         </div>
@@ -74,7 +74,7 @@ export default {
             const player = this.players ? this.players.find((player)=>player.id == id) : undefined;
             return player ? player.money : 0;
         },
-        plus($e) {
+        handlePay($e) {
             const givingUserDoc = this.players.find((player)=>player.id == this.user.uid)
             const receivingUserDoc = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
@@ -89,7 +89,7 @@ export default {
                 },
             });
         },
-        bank_plus($e) {
+        handleGetMoneyBank($e) {
             const player = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
                 change: Number($e.value),
@@ -99,7 +99,7 @@ export default {
                 }
             });
         },
-        minus($e) {
+        handleGet($e) {
             const player = this.players.find((player)=>player.id == $e.player)
             this.$emit('money_change', {
                 change: Number($e.value),
