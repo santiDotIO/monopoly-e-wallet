@@ -141,11 +141,11 @@ export default {
                 .data().color;
 
             if (eventType.includes('new_player')) {
-                event.text = `<strong>${this.user.displayName}</strong> Joined the Game!`;
+                event.text = `<strong class="event-pill ${event.color}">${this.user.displayName}</strong> Joined the Game!`;
             } else if(eventType.includes('money_transaction')) {
                 event.text = this.getMoneyTransactionText(transaction);
             } else if(eventType.includes('passed_go')) {
-                event.text = `<strong>${this.user.displayName}</strong> passed go!`;
+                event.text = `<strong class="event-pill ${event.color}">${this.user.displayName}</strong> passed go!`;
             }
             
             if (typeof event.text == 'undefined') return;
@@ -159,33 +159,34 @@ export default {
             const giverDefined = typeof transaction.giving != 'undefined';
             const receivingDefined = typeof transaction.receiving != 'undefined';
             const changeCurr = this.$options.filters.currency(transaction.change);
-            let giverName;
+            let givingPlayer;
             let receivingPlayer;
             
             if (giverDefined) {
-                giverName = this.players
+                givingPlayer = this.players
                     .find( player => player.id == transaction.giving.id)
-                    .data().name;
+                    .data();
             }
 
             if (receivingDefined) {
                 receivingPlayer = this.players
                     .find( player => player.id == transaction.receiving.id )
-                    .data().name;
+                    .data();
             }
-            
+            // const pillStyles = 'rounded px-1 text-white';
+
             if (giverDefined && receivingDefined) {
-                return `<strong>${giverName}</strong> payed <strong>${changeCurr}</strong> to <strong>${receivingPlayer}</strong>`;
+                return `<strong class="event-pill ${givingPlayer.color}">${givingPlayer.name}</strong> payed <strong>${changeCurr}</strong> to <strong class="event-pill ${receivingPlayer.color}">${receivingPlayer.name}</strong>`;
             }
 
             // player payed Bank
             if (giverDefined && !receivingDefined) {
-                return `<strong>${giverName}</strong> payed <strong>${changeCurr}</strong> to <strong>Bank</strong>`;
+                return `<strong class="event-pill ${givingPlayer.color}">${givingPlayer.name}</strong> payed <strong>${changeCurr}</strong> to <strong>Bank</strong>`;
             }
             
             // Bank Payed player
             if (!giverDefined && receivingDefined) {
-                return `<strong>Bank</strong> payed <strong>${changeCurr}</strong> to <strong>${receivingPlayer}</strong>`;
+                return `<strong>Bank</strong> payed <strong>${changeCurr}</strong> to <strong class="event-pill ${receivingPlayer.color}">${receivingPlayer.name}</strong>`;
             }
         },
         lobbyName() {

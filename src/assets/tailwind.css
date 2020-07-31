@@ -3,3 +3,9 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.event-pill {
+    color: #ffffff;
+    padding: 0 0.25rem;
+    border-radius: 0.25rem;
+}
