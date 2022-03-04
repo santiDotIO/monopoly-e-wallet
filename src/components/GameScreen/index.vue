@@ -42,7 +42,7 @@
                     v-bind:playerMoney="getUserMoney(user.id)"
                     v-bind:showGet="true" 
                     v-on:onGet="handleGetMoneyBank"
-                    v-on:onPay="handlePay"
+                    v-on:onPay="handlePay($event, false)"
                 />
             </div>
         </div>
@@ -81,20 +81,23 @@ export default {
             const player = this.players ? this.players.find((player)=>player.id == id) : undefined;
             return player ? player.money : 0;
         },
-        handlePay($e) {
+        handlePay($e, payPLayer=true) {
             const givingUserDoc = this.players.find((player)=>player.id == this.user.uid)
             const receivingUserDoc = this.players.find((player)=>player.id == $e.player)
-            this.$emit('money_change', {
+            const data = {
                 change: Number($e.value),
                 giving:{
                     id: this.user.uid,
                     value: Number(givingUserDoc.data().money) - Number($e.value),
-                },
-                receiving: {
+                }
+            }
+            if (payPLayer) {
+                data.receiving = {
                     id: receivingUserDoc.id,
                     value: Number(receivingUserDoc.data().money) + Number($e.value),
-                },
-            });
+                };
+            }
+            this.$emit('money_change', data);
         },
         handleGet($e) {
             const player = this.players.find((player)=>player.id == $e.player)
